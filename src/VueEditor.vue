@@ -127,7 +127,7 @@ export default {
     },
 
     registerBuiltInModules() {
-      Quill.register('modules/markdownShortcuts', MarkdownShortcuts, true)
+      Quill.register('modules/markdownShortcuts', MarkdownShortcuts)
     },
 
     registerCustomModules() {
