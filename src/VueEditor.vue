@@ -71,8 +71,8 @@ export default {
 
   watch: {
     value (val) {
-      if (val !=  this.editor.innerHTML && !this.quill.hasFocus()) {
-        this.editor.innerHTML = val
+      if (val !=  this.quill.root.innerHTML && !this.quill.hasFocus()) {
+        this.quill.root.innerHTML = val
       }
     },
     disabled(status) {
@@ -88,14 +88,14 @@ export default {
       this.checkForInitialContent()
       this.checkForCustomImageHandler()
 
-      // this.quill.on('selection-change', range => {
-      //   this.$emit('selection-change', range)
-      //   if (!range) {
-      //     this.$emit('blur', this.quill)
-      //   } else {
-      //     this.$emit('focus', this.quill)
-      //   }
-      // });
+      this.quill.on('selection-change', range => {
+        this.$emit('selection-change', range)
+        if (!range) {
+          this.$emit('blur', this.quill)
+        } else {
+          this.$emit('focus', this.quill)
+        }
+      });
 
     },
 
@@ -117,7 +117,7 @@ export default {
 
     handleDynamicStyles() {
       if ( this.imageResizeActive ) {
-        this.editor.classList.add('imageResizeActive');
+        this.quill.root.classList.add('imageResizeActive');
       }
     },
 
@@ -127,7 +127,7 @@ export default {
     },
 
     registerBuiltInModules() {
-      Quill.register('modules/markdownShortcuts', MarkdownShortcuts)
+      Quill.register('modules/markdownShortcuts', MarkdownShortcuts, true)
     },
 
     registerCustomModules() {
@@ -150,7 +150,7 @@ export default {
 
     checkForInitialContent() {
       if (this.value) {
-        this.editor.innerHTML = this.filteredInitialContent
+        this.quill.root.innerHTML = this.filteredInitialContent
       }
       //
     },
@@ -166,7 +166,7 @@ export default {
 
     handleUpdatedEditor() {
       this.quill.on('text-change', () => {
-        let editorContent = this.editor.innerHTML
+        let editorContent = this.quill.root.innerHTML
         if ( editorContent === '<p><br></p>' ) editorContent = ''
         this.$emit('input', editorContent)
       })
